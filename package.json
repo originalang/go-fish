@@ -1,0 +1,19 @@
+{
+  "name": "go-fish",
+  "version": "1.0.0",
+  "description": "An implementation of Go Fish (card game) in Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/originalang/go-fish.git"
+  },
+  "author": "originalang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/originalang/go-fish/issues"
+  },
+  "homepage": "https://github.com/originalang/go-fish#readme"
+}
