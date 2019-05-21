@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="main.css">
     <title>Go Fish</title>
 </head>
+
 <body>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>	
-	<script src="main.js"></script>
+    <div id="welcome-animation"></div>
+
+    <div id="welcome-page" class="center">
+        <a class="waves-effect waves-light btn-large margin-10" id="new-game">Host a Game</a>
+        <a class="waves-effect waves-light btn-large margin-10" id="join-game">Join a Game</a>
+    </div>
+
+    <input type="text" id="game-code-input" class="validate center hide" placeholder="Enter game code">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="main.js"></script>
 </body>
+
 </html>
