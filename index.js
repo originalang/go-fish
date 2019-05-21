@@ -24,7 +24,7 @@ io.sockets.on('connection', (socket) => {
     console.log(`CONNECTED: Number of connections => ${connections.length}`);
 
     socket.on('disconnect', () => {
-        connections.splice(socket);
+        connections.splice(connections.indexOf(socket), 1);
         console.log(`DISCONNECTED: Number of connections => ${connections.length}`);
     });
 
@@ -32,7 +32,7 @@ io.sockets.on('connection', (socket) => {
         let gameCode = generateGameCode();
 
         socket.gameCode = gameCode;
-        gameDecks[gameCode] = new Deck().shuffle();
+        gameDecks[gameCode] = new Deck();
 
         socket.emit('game code', gameCode);
     });
@@ -46,14 +46,17 @@ io.sockets.on('connection', (socket) => {
     });
 
     socket.on('deal', () => {
+        let currentDeck = gameDecks[socket.gameCode];
         let players = getClientsFromGame(socket.gameCode);
+
+        currentDeck.shuffle();
 
         players.forEach((player) => {
             player.hand = []
 
             for (let i = 0; i < 7; i++) {
-                player.hand.push(gamesDecks[socket.gameCode].draw());
-            }
+                player.hand.push(currentDeck.draw());
+            }            
 
             player.emit('hand', player.hand);
         });
