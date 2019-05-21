@@ -7,6 +7,7 @@ const gameCodeDisplay = document.querySelector('#game-code');
 const startGame = document.querySelector('#start-game');
 const playerHand = document.querySelector('#hand');
 const matchButton = document.querySelector('#match');
+const pointsDisplay = document.querySelector('#points');
 
 document.querySelector('#new-game').addEventListener('click', (e) => {
     socket.emit('new game');
@@ -38,7 +39,7 @@ matchButton.addEventListener('click', (e) => {
         }
     });
 
-    if (selected.length === 4 && Object.keys(matchTest).length === 1) {
+    if ((selected.length === 2 || selected.length === 4) && Object.keys(matchTest).length === 1) {
         socket.emit('match found', [...selected].map(c => c.name));
     }
     
@@ -55,9 +56,15 @@ socket.on('game code', (gameCode) => {
 });
 
 socket.on('hand', (hand) => {
+    playerHand.innerHTML = '';
+
     hand.forEach((card) => {
         playerHand.innerHTML += `<img class="card" src="cards/${card.name.toLowerCase().split(' ').join('_')}.png" alt="${card.name}" name="${card.name}" data-value="${card.value}" onclick="cardClicked(this)">`
     });
+});
+
+socket.on('points', (points) => {
+    pointsDisplay.innerHTML = points;
 });
 
 // helper functions

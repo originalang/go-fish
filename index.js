@@ -63,7 +63,22 @@ io.sockets.on('connection', (socket) => {
     });
 
     socket.on('match found', (matches) => {
-        console.log(matches);
+        if (!socket.hasOwnProperty('points')) {
+            socket.points = 0
+        }
+
+        matches.forEach((cardName) => {
+            socket.hand.splice(socket.hand.indexOf(getCardFromHand(socket, cardName)), 1);
+        });
+
+        if (matches.length === 4) {
+            socket.points += 5
+        } else {
+            socket.points += 1
+        }
+
+        socket.emit('hand', socket.hand);
+        socket.emit('points', socket.points);
     });
 });
 
@@ -79,4 +94,12 @@ function getClientsFromGame(gameCode) {
     return connections.filter((socket) => {
         return socket.gameCode === gameCode;
     });
+}
+
+// card funcitonality
+
+function getCardFromHand(socket, name) {
+    return socket.hand.filter((card) => {
+        return card.name === name;
+    })[0];
 }
