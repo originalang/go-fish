@@ -1,42 +1,66 @@
 .center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .margin-10 {
-    margin: 10px;
+  margin: 10px;
 }
 
 .hide {
-    display: none;
+  display: none;
+}
+
+.card {
+  cursor: pointer;
+  margin: 1.2rem;
+  transition: 0.3s ease-in-out;
+  width: 100px;
+}
+
+.card:hover {
+  transform: scale(1.1);
+  z-index: 10;
+}
+
+.selected {
+  transform: scale(1.1);
+  -webkit-box-shadow: -2px -5px 57px -21px rgba(105, 233, 255, 1);
+  -moz-box-shadow: -2px -5px 57px -21px rgba(105, 233, 255, 1);
+  box-shadow: -2px -5px 57px -21px rgba(105, 233, 255, 1);
 }
 
 #welcome-animation {
-    background-color: black;
-    height: 250px;
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 250px;
+  background-color: black;
+  height: 250px;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
 }
 
 #game-code-input {
-    font-size: 2rem;
-    width: 30%;
+  font-size: 2rem;
+  width: 30%;
+}
+
+#hand {
+  position: fixed;
+  bottom: 0;
 }
 
 @media only screen and (max-width: 900px) {
-    #game-code-input {
-        width: 50%;
-    }
+  #game-code-input {
+    width: 50%;
+  }
 }
 
 @media only screen and (max-width: 700px) {
-    #game-code-input {
-        font-size: 1.5rem;
-        width: 60%;
-    }
+  #game-code-input {
+    font-size: 1.5rem;
+    width: 60%;
+  }
 }

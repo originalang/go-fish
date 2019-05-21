@@ -54,12 +54,16 @@ io.sockets.on('connection', (socket) => {
         players.forEach((player) => {
             player.hand = []
 
-            for (let i = 0; i < 7; i++) {
+            for (let i = 0; i < 27; i++) {
                 player.hand.push(currentDeck.draw());
             }            
 
             player.emit('hand', player.hand);
         });
+    });
+
+    socket.on('match found', (matches) => {
+        console.log(matches);
     });
 });
 
