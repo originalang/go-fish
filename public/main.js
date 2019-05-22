@@ -116,7 +116,9 @@ socket.on('active players', (players) => {
     playerSelect.innerHTML = '';
 
     players.forEach((player) => {
-        playerSelect.innerHTML += `<option value="${player}">${player}</option>`
+        if (player !== finalUsername) {
+            playerSelect.innerHTML += `<option value="${player}">${player}</option>`
+        }
     });
 });
 
