@@ -131,7 +131,15 @@ socket.on('turn info', (username) => {
 });
 
 socket.on('question', (username, value) => {
-    messageBoard.innerHTML = `${username} asks: Do you have a ${value}?`;
+    messageBoard.innerHTML = `<div id="message-board">${username} asks: Do you have a ${value}?</div>
+                            <div>
+                                <a class="waves-effect waves-light btn-large margin-10" data-username="${username}" >Yes</a>
+                                <a class="waves-effect waves-light btn-large margin-10" data-username="${username}" onclick="goFish(this.dataset.username)">Go Fish</a>
+                            </div>`;
+});
+
+socket.on('message', (resp) => {
+    messageBoard.innerHTML = resp;
 });
 
 // helper functions
@@ -150,4 +158,8 @@ function cardClicked(card) {
             c.style.opacity = '1';
         }
     });
+}
+
+function goFish(username) {
+    socket.emit('go fish', username);
 }

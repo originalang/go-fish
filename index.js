@@ -68,23 +68,13 @@ io.sockets.on('connection', (socket) => {
 
         currentDeck.shuffle();
 
-        let i = 0;
-
-        while (currentDeck.cards.length > 0) {
-            if (i === players.length) {
-                i = 0;
-            }
-
-            if (!players[i].hasOwnProperty('hand')) {
-                players[i].hand = [];
-            }
-
-            players[i].hand.push(currentDeck.draw());
-
-            i++;
-        }
-
         players.forEach((player) => {
+            player.hand = [];
+
+            for (let i = 0; i < 7; i++) {
+                player.hand.push(currentDeck.draw());
+            }
+
             player.emit('hand', player.hand);
         });
     });
@@ -125,6 +115,15 @@ io.sockets.on('connection', (socket) => {
         let player = getClientByUsername(username);
 
         player.emit('question', socket.username, value);
+    });
+
+    socket.on('go fish', (username) => {
+        let player = getClientByUsername(username);
+
+        player.hand.push(gameDecks[player.gameCode].draw());
+
+        player.emit('hand', player.hand);
+        player.emit('message', `${socket.username} did not have that card`)
     });
 });
 
