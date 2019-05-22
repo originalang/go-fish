@@ -44,13 +44,17 @@ io.sockets.on('connection', (socket) => {
 
     socket.on('join game', (gameCode) => {
         if (gameDecks.hasOwnProperty(gameCode)) {
-            if (gameDecks[gameCode].cards.length > 0) {
+            let players = getClientsFromGame(gameCode);
+
+            if (gameDecks[gameCode].cards.length > 0 && players.length < 5) {
                 socket.gameCode = gameCode;
 
                 // join the room
                 socket.join(socket.gameCode);
 
                 socket.emit('found game');
+            } else {
+                socket.emit('message', 'The game is either at full capacity, or already started.');
             }
         }
     });
@@ -59,6 +63,7 @@ io.sockets.on('connection', (socket) => {
         socket.username = username;
 
         socket.emit('game code', socket.gameCode);
+        io.to(socket.gameCode).emit('new player', socket.username);
         io.to(socket.gameCode).emit('active players', getActivePlayers(socket.gameCode));
     });
 
@@ -80,14 +85,14 @@ io.sockets.on('connection', (socket) => {
     });
 
     socket.on('next turn', () => {
-        let players = getClientsFromGame(socket.gameCode); 
+        let players = getClientsFromGame(socket.gameCode);
 
         gameTurns[socket.gameCode] += 1;
 
         if (gameTurns[socket.gameCode] === players.length) {
             gameTurns[socket.gameCode] = 0
         }
-        
+
         players[gameTurns[socket.gameCode]].emit('turn');
         io.to(socket.gameCode).emit('turn info', players[gameTurns[socket.gameCode]].username);
     });
@@ -118,14 +123,38 @@ io.sockets.on('connection', (socket) => {
     });
 
     socket.on('go fish', (username) => {
+        let currentDeck = gameDecks[socket.gameCode];
+
         let player = getClientByUsername(username);
 
-        let cardDrawn = gameDecks[player.gameCode].draw();
+        let cardDrawn = currentDeck.draw();
 
         player.hand.push(cardDrawn);
 
         player.emit('hand', player.hand);
         player.emit('message', `${socket.username} did not have that card. You drew the ${cardDrawn.name}!`)
+
+        if (currentDeck.length === 0) {
+            io.to(socket.gameCode).emit('deck empty');
+        }
+    });
+
+    socket.on('transfer card', (username, cardValue) => {
+        let player = getClientByUsername(username);
+
+        let transferCard = getCardFromHandByValue(socket, cardValue);
+
+        if (transferCard.length > 0) {
+            player.hand.push(transferCard[0]);
+            socket.hand.splice(socket.hand.indexOf(transferCard[0]), 1);
+
+            socket.emit('hand', socket.hand);
+            socket.emit('message', `You gave ${username} the ${transferCard[0].name}`)
+            player.emit('hand', player.hand);
+            player.emit('message', `You received the ${transferCard[0].name} from ${socket.username} `)
+        } else {
+            socket.emit('message', `You do not have a card with a value of ${cardValue}`)
+        }
     });
 });
 
@@ -162,4 +191,24 @@ function getCardFromHand(socket, name) {
     return socket.hand.filter((card) => {
         return card.name === name;
     })[0];
+}
+
+function getCardFromHandByValue(socket, value) {
+    return socket.hand.filter((card) => {
+        return card.value == convertValue(value);
+    });
+}
+
+function convertValue(val) {
+    if (val === 'Ace') {
+        return 1;
+    } else if (val === 'Jack') {
+        return 11;
+    } else if (val === 'Queen') {
+        return 12;
+    } else if (val === 'King') {
+        return 13;
+    } else {
+        return val;
+    }
 }

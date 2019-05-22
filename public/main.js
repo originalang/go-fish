@@ -112,6 +112,10 @@ socket.on('points', (points) => {
     pointsDisplay.innerHTML = points;
 });
 
+socket.on('new player', (username) => {
+    M.toast({html: `${username} joined the game`, displayLength: 10000});
+});
+
 socket.on('active players', (players) => {
     playerSelect.innerHTML = '';
 
@@ -137,7 +141,7 @@ socket.on('turn info', (username) => {
 socket.on('question', (username, value) => {
     messageBoard.innerHTML = `<div id="message-board">${username} asks: Do you have a ${value}?</div>
                             <div>
-                                <a class="waves-effect waves-light btn-large margin-10" data-username="${username}" >Yes</a>
+                                <a class="waves-effect waves-light btn-large margin-10" data-username="${username}" data-value="${value}" onclick="transferCard(this.dataset.username, this.dataset.value)">Yes</a>
                                 <a class="waves-effect waves-light btn-large margin-10" data-username="${username}" onclick="goFish(this.dataset.username)">Go Fish</a>
                             </div>`;
 
@@ -146,7 +150,12 @@ socket.on('question', (username, value) => {
 });
 
 socket.on('message', (resp) => {
-    messageBoard.innerHTML = resp;
+    M.toast({html: resp, displayLength: 10000});
+});
+
+socket.on('deck empty', () => {
+    messageBoard.innerHTML = 'The deck is now empty';
+    document.querySelector('go fish').classList.add('hide');
 });
 
 // helper functions
@@ -169,6 +178,14 @@ function cardClicked(card) {
 
 function goFish(username) {
     socket.emit('go fish', username);
+    messageBoard.innerHTML = '';
+
+    turnComplete.classList.remove('hide');
+    askQuestion.classList.remove('hide');
+}
+
+function transferCard(username, cardValue) {
+    socket.emit('transfer card', username, cardValue);
     messageBoard.innerHTML = '';
 
     turnComplete.classList.remove('hide');
