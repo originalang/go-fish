@@ -46,6 +46,11 @@
   width: 30%;
 }
 
+#username {
+  font-size: 2rem;
+  width: 30%;
+}
+
 #hand {
   bottom: 0;
   display: flex;

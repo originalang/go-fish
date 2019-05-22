@@ -4,6 +4,7 @@ const welcomePage = document.querySelector('#welcome-page');
 const gamePage = document.querySelector('#game-page');
 const welcomeAnimation = document.querySelector('#welcome-animation');
 const gameCodeInput = document.querySelector('#game-code-input');
+const usernameInput = document.querySelector('#username');
 const gameCodeDisplay = document.querySelector('#game-code');
 const startGame = document.querySelector('#start-game');
 const playerHand = document.querySelector('#hand');
@@ -12,7 +13,9 @@ const pointsDisplay = document.querySelector('#points');
 
 document.querySelector('#new-game').addEventListener('click', (e) => {
     socket.emit('new game');
-    gamePage.classList.remove('hide');
+    welcomePage.classList.add('hide');
+    gameCodeInput.classList.remove('hide');
+    startGame.classList.remove('hide');
 });
 
 document.querySelector('#join-game').addEventListener('click', (e) => {
@@ -24,11 +27,13 @@ gameCodeInput.addEventListener('change', (e) => {
     socket.emit('join game', gameCodeInput.value);
 });
 
+usernameInput.addEventListener('change', (e) => {
+    socket.emit('username', usernameInput.value);
+});
+
 startGame.addEventListener('click', (e) => {
     socket.emit('deal');
     startGame.classList.add('hide');
-    matchButton.classList.remove('hide');
-    pointsDisplay.classList.remove('hide');
 });
 
 matchButton.addEventListener('click', (e) => {
@@ -50,10 +55,18 @@ matchButton.addEventListener('click', (e) => {
 
 // incoming events
 
+socket.on('found game', () => {
+    gameCodeInput.classList.add('hide');
+    usernameInput.classList.remove('hide');
+});
+
 socket.on('game code', (gameCode) => {
     welcomePage.classList.add('hide');
     welcomeAnimation.classList.add('hide');
-    gameCodeInput.classList.add('hide');
+
+    usernameInput.classList.add('hide');
+
+    gamePage.classList.remove('hide');
 
     gameCodeDisplay.innerHTML = gameCode;
 });
@@ -64,6 +77,9 @@ socket.on('hand', (hand) => {
     hand.forEach((card) => {
         playerHand.innerHTML += `<img class="card" src="cards/${card.name.toLowerCase().split(' ').join('_')}.png" alt="${card.name}" name="${card.name}" data-value="${card.value}" onclick="cardClicked(this)">`
     });
+
+    matchButton.classList.remove('hide');
+    pointsDisplay.classList.remove('hide');
 });
 
 socket.on('points', (points) => {

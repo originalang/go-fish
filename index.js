@@ -34,15 +34,21 @@ io.sockets.on('connection', (socket) => {
         socket.gameCode = gameCode;
         gameDecks[gameCode] = new Deck();
 
-        socket.emit('game code', gameCode);
+        socket.emit('found game');
     });
 
     socket.on('join game', (gameCode) => {
         if (gameDecks.hasOwnProperty(gameCode)) {
             socket.gameCode = gameCode;
 
-            socket.emit('game code', gameCode);
+            socket.emit('found game');
         }
+    });
+
+    socket.on('username', (username) => {
+        socket.username = username;
+
+        socket.emit('game code', socket.gameCode);
     });
 
     socket.on('deal', () => {
@@ -51,13 +57,23 @@ io.sockets.on('connection', (socket) => {
 
         currentDeck.shuffle();
 
+        let i = 0;
+
+        while (currentDeck.cards.length > 0) {
+            if (i === players.length) {
+                i = 0;
+            }
+            
+            if (!players[i].hasOwnProperty('hand')) {
+                players[i].hand = [];
+            }
+
+            players[i].hand.push(currentDeck.draw());
+
+            i++;
+        }
+
         players.forEach((player) => {
-            player.hand = []
-
-            for (let i = 0; i < 27; i++) {
-                player.hand.push(currentDeck.draw());
-            }            
-
             player.emit('hand', player.hand);
         });
     });
@@ -83,7 +99,7 @@ io.sockets.on('connection', (socket) => {
 });
 
 function getRandomNumberInRange(min, max) {
-	return Math.floor(Math.random() * (max - min) + min);
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 function generateGameCode() {
