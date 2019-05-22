@@ -39,9 +39,11 @@ io.sockets.on('connection', (socket) => {
 
     socket.on('join game', (gameCode) => {
         if (gameDecks.hasOwnProperty(gameCode)) {
-            socket.gameCode = gameCode;
+            if (gameDecks[gameCode].cards.length > 0) {
+                socket.gameCode = gameCode;
 
-            socket.emit('found game');
+                socket.emit('found game');
+            }
         }
     });
 
@@ -63,7 +65,7 @@ io.sockets.on('connection', (socket) => {
             if (i === players.length) {
                 i = 0;
             }
-            
+
             if (!players[i].hasOwnProperty('hand')) {
                 players[i].hand = [];
             }
