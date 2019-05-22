@@ -1,6 +1,7 @@
 let socket = io.connect();
 
 const welcomePage = document.querySelector('#welcome-page');
+const gamePage = document.querySelector('#game-page');
 const welcomeAnimation = document.querySelector('#welcome-animation');
 const gameCodeInput = document.querySelector('#game-code-input');
 const gameCodeDisplay = document.querySelector('#game-code');
@@ -11,7 +12,7 @@ const pointsDisplay = document.querySelector('#points');
 
 document.querySelector('#new-game').addEventListener('click', (e) => {
     socket.emit('new game');
-    startGame.classList.remove('hide');
+    gamePage.classList.remove('hide');
 });
 
 document.querySelector('#join-game').addEventListener('click', (e) => {
@@ -26,6 +27,8 @@ gameCodeInput.addEventListener('change', (e) => {
 startGame.addEventListener('click', (e) => {
     socket.emit('deal');
     startGame.classList.add('hide');
+    matchButton.classList.remove('hide');
+    pointsDisplay.classList.remove('hide');
 });
 
 matchButton.addEventListener('click', (e) => {

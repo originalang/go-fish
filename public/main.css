@@ -17,7 +17,6 @@
   cursor: pointer;
   margin: 1.2rem;
   transition: 0.3s ease-in-out;
-  width: 100px;
 }
 
 .card:hover {
@@ -48,8 +47,34 @@
 }
 
 #hand {
-  position: fixed;
   bottom: 0;
+  display: flex;
+  max-width: 100vw;
+  overflow: scroll;
+  overflow-y: hidden;
+  position: fixed;
+}
+
+#points {
+  bottom: 220px;
+  left: 25px;
+  position: absolute;
+}
+
+#match {
+  bottom: 220px;
+  right: 25px;
+  position: absolute;
+}
+
+#game-code {
+  float: right;
+  font-size: 2rem;
+}
+
+::-webkit-scrollbar {
+  background: transparent;
+  width: 0px;
 }
 
 @media only screen and (max-width: 900px) {
