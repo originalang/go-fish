@@ -125,17 +125,17 @@ io.sockets.on('connection', (socket) => {
     socket.on('go fish', (username) => {
         let currentDeck = gameDecks[socket.gameCode];
 
-        let player = getClientByUsername(username);
+        if (currentDeck.cards.length > 0) {
+            let player = getClientByUsername(username);
 
-        let cardDrawn = currentDeck.draw();
+            let cardDrawn = currentDeck.draw();
 
-        player.hand.push(cardDrawn);
+            player.hand.push(cardDrawn);
 
-        player.emit('hand', player.hand);
-        player.emit('message', `${socket.username} did not have that card. You drew the ${cardDrawn.name}!`)
-
-        if (currentDeck.length === 0) {
-            io.to(socket.gameCode).emit('deck empty');
+            player.emit('hand', player.hand);
+            player.emit('message', `${socket.username} did not have that card. You drew the ${cardDrawn.name}!`)
+        } else {
+            io.to(socket.gameCode).emit('message', 'The deck is empty');
         }
     });
 

@@ -110,6 +110,11 @@ socket.on('hand', (hand) => {
 
 socket.on('points', (points) => {
     pointsDisplay.innerHTML = points;
+    pointsDisplay.classList.add('pulse');
+
+    setTimeout(() => {
+        pointsDisplay.classList.remove('pulse');
+    }, 3000);
 });
 
 socket.on('new player', (username) => {
@@ -155,7 +160,6 @@ socket.on('message', (resp) => {
 
 socket.on('deck empty', () => {
     messageBoard.innerHTML = 'The deck is now empty';
-    document.querySelector('go fish').classList.add('hide');
 });
 
 // helper functions
