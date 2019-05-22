@@ -59,6 +59,7 @@ io.sockets.on('connection', (socket) => {
         socket.username = username;
 
         socket.emit('game code', socket.gameCode);
+        io.to(socket.gameCode).emit('active players', getActivePlayers(socket.gameCode));
     });
 
     socket.on('deal', () => {
@@ -119,6 +120,12 @@ io.sockets.on('connection', (socket) => {
         socket.emit('hand', socket.hand);
         socket.emit('points', socket.points);
     });
+
+    socket.on('ask', (username, value) => {
+        let player = getClientByUsername(username);
+
+        player.emit('question', socket.username, value);
+    });
 });
 
 function getRandomNumberInRange(min, max) {
@@ -133,6 +140,19 @@ function getClientsFromGame(gameCode) {
     return connections.filter((socket) => {
         return socket.gameCode === gameCode;
     });
+}
+
+function getClientByUsername(username) {
+    // assuming unique usernames
+    return connections.filter((socket) => {
+        return socket.username === username;
+    })[0];
+}
+
+function getActivePlayers(gameCode) {
+    return connections.filter((socket) => {
+        return socket.gameCode === gameCode;
+    }).map(s => s.username);
 }
 
 // card funcitonality

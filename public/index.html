@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
     <link rel="stylesheet" href="main.css">
     <title>Go Fish</title>
 </head>
@@ -27,10 +28,48 @@
 
         <div id="hand" align="center"></div>
 
+        <!-- Modal Trigger -->
+        <a class="waves-effect waves-light btn-large hide modal-trigger" href="#modal1" id="ask-question">Ask for a Card</a>
         <a class="waves-effect waves-light btn-large hide" id="turn-complete">Im done with my turn!</a>
 
         <a class="btn-floating btn-large pulse hide" id="points"></a>
         <a class="waves-effect waves-light btn-large hide" id="match">Match</a>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Ask a player for a card</h4>
+            Does &nbsp;&nbsp;
+            <div class="ui action input">
+                <select id="player-select" class="ui compact selection dropdown">
+                    <option selected="" value="">Select a player</option>
+                </select>
+            </div> &nbsp;&nbsp;
+            have a &nbsp;&nbsp;
+            <div class="ui action input">
+                <select id="card-select" class="ui compact selection dropdown">
+                    <option selected="" value="">Select a card value</option>
+                    <option value="1">Ace</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">Jack</option>
+                    <option value="12">Queen</option>
+                    <option value="13">King</option>
+                </select>
+            </div> &nbsp;&nbsp;
+            ?
+        </div>
+        <div class="modal-footer">
+            <a id="send-question" href="#!" class="modal-close waves-effect waves-green btn-flat">Send Question</a>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

@@ -72,6 +72,12 @@
   position: absolute;
 }
 
+#ask-question {
+  bottom: 300px;
+  left: 25px;
+  position: absolute;
+}
+
 #match {
   bottom: 220px;
   right: 25px;

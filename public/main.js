@@ -1,3 +1,8 @@
+document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
+});
+
 let socket = io.connect();
 
 const welcomePage = document.querySelector('#welcome-page');
@@ -11,6 +16,10 @@ const playerHand = document.querySelector('#hand');
 const matchButton = document.querySelector('#match');
 const pointsDisplay = document.querySelector('#points');
 const turnComplete = document.querySelector('#turn-complete');
+const askQuestion = document.querySelector('#ask-question');
+const playerSelect = document.querySelector('#player-select');
+const cardSelect = document.querySelector('#card-select');
+const sendQuestion = document.querySelector('#send-question');
 
 // save current client's username
 let finalUsername;
@@ -56,11 +65,15 @@ matchButton.addEventListener('click', (e) => {
     if ((selected.length === 2 || selected.length === 4) && Object.keys(matchTest).length === 1) {
         socket.emit('match found', [...selected].map(c => c.name));
     }
-    
+
 });
 
 turnComplete.addEventListener('click', (e) => {
     socket.emit('next turn');
+});
+
+sendQuestion.addEventListener('click', () => {
+    socket.emit('ask', playerSelect.value, cardSelect.value);
 });
 
 // incoming events
@@ -96,14 +109,28 @@ socket.on('points', (points) => {
     pointsDisplay.innerHTML = points;
 });
 
+socket.on('active players', (players) => {
+    playerSelect.innerHTML = '';
+
+    players.forEach((player) => {
+        playerSelect.innerHTML += `<option value="${player}">${player}</option>`
+    });
+});
+
 socket.on('turn', () => {
-    turnComplete.classList.remove('hide');    
+    turnComplete.classList.remove('hide');
+    askQuestion.classList.remove('hide');
 });
 
 socket.on('turn info', (username) => {
     if (finalUsername !== username) {
         turnComplete.classList.add('hide');
+        askQuestion.classList.add('hide');
     }
+});
+
+socket.on('question', (username, value) => {
+    console.log(`${username} asks: Do you have a ${value}?`);
 });
 
 // helper functions
