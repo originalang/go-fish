@@ -89,6 +89,11 @@
   font-size: 2rem;
 }
 
+#interactive-section {
+  font-size: 2rem;
+  transform: translateX(-30%);
+}
+
 ::-webkit-scrollbar {
   background: transparent;
   width: 0px;

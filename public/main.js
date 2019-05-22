@@ -20,6 +20,7 @@ const askQuestion = document.querySelector('#ask-question');
 const playerSelect = document.querySelector('#player-select');
 const cardSelect = document.querySelector('#card-select');
 const sendQuestion = document.querySelector('#send-question');
+const messageBoard = document.querySelector('#interactive-section');
 
 // save current client's username
 let finalUsername;
@@ -130,7 +131,7 @@ socket.on('turn info', (username) => {
 });
 
 socket.on('question', (username, value) => {
-    console.log(`${username} asks: Do you have a ${value}?`);
+    messageBoard.innerHTML = `${username} asks: Do you have a ${value}?`;
 });
 
 // helper functions
