@@ -66,6 +66,12 @@
   position: absolute;
 }
 
+#turn-complete {
+  bottom: 300px;
+  right: 25px;
+  position: absolute;
+}
+
 #match {
   bottom: 220px;
   right: 25px;

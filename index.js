@@ -8,6 +8,7 @@ const { Deck } = require('./deck.js');
 
 let connections = [];
 let gameDecks = {};
+let gameTurns = {};
 
 app.use(express.static('public'));
 
@@ -33,6 +34,10 @@ io.sockets.on('connection', (socket) => {
 
         socket.gameCode = gameCode;
         gameDecks[gameCode] = new Deck();
+        gameTurns[gameCode] = -1;
+
+        // join the room
+        socket.join(socket.gameCode);
 
         socket.emit('found game');
     });
@@ -41,6 +46,9 @@ io.sockets.on('connection', (socket) => {
         if (gameDecks.hasOwnProperty(gameCode)) {
             if (gameDecks[gameCode].cards.length > 0) {
                 socket.gameCode = gameCode;
+
+                // join the room
+                socket.join(socket.gameCode);
 
                 socket.emit('found game');
             }
@@ -78,6 +86,19 @@ io.sockets.on('connection', (socket) => {
         players.forEach((player) => {
             player.emit('hand', player.hand);
         });
+    });
+
+    socket.on('next turn', () => {
+        let players = getClientsFromGame(socket.gameCode); 
+
+        gameTurns[socket.gameCode] += 1;
+
+        if (gameTurns[socket.gameCode] === players.length) {
+            gameTurns[socket.gameCode] = 0
+        }
+        
+        players[gameTurns[socket.gameCode]].emit('turn');
+        io.to(socket.gameCode).emit('turn info', players[gameTurns[socket.gameCode]].username);
     });
 
     socket.on('match found', (matches) => {

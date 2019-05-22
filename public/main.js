@@ -10,6 +10,10 @@ const startGame = document.querySelector('#start-game');
 const playerHand = document.querySelector('#hand');
 const matchButton = document.querySelector('#match');
 const pointsDisplay = document.querySelector('#points');
+const turnComplete = document.querySelector('#turn-complete');
+
+// save current client's username
+let finalUsername;
 
 document.querySelector('#new-game').addEventListener('click', (e) => {
     socket.emit('new game');
@@ -28,11 +32,13 @@ gameCodeInput.addEventListener('change', (e) => {
 });
 
 usernameInput.addEventListener('change', (e) => {
+    finalUsername = usernameInput.value;
     socket.emit('username', usernameInput.value);
 });
 
 startGame.addEventListener('click', (e) => {
     socket.emit('deal');
+    socket.emit('next turn');
     startGame.classList.add('hide');
 });
 
@@ -51,6 +57,10 @@ matchButton.addEventListener('click', (e) => {
         socket.emit('match found', [...selected].map(c => c.name));
     }
     
+});
+
+turnComplete.addEventListener('click', (e) => {
+    socket.emit('next turn');
 });
 
 // incoming events
@@ -84,6 +94,16 @@ socket.on('hand', (hand) => {
 
 socket.on('points', (points) => {
     pointsDisplay.innerHTML = points;
+});
+
+socket.on('turn', () => {
+    turnComplete.classList.remove('hide');    
+});
+
+socket.on('turn info', (username) => {
+    if (finalUsername !== username) {
+        turnComplete.classList.add('hide');
+    }
 });
 
 // helper functions
