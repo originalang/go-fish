@@ -120,10 +120,12 @@ io.sockets.on('connection', (socket) => {
     socket.on('go fish', (username) => {
         let player = getClientByUsername(username);
 
-        player.hand.push(gameDecks[player.gameCode].draw());
+        let cardDrawn = gameDecks[player.gameCode].draw();
+
+        player.hand.push(cardDrawn);
 
         player.emit('hand', player.hand);
-        player.emit('message', `${socket.username} did not have that card`)
+        player.emit('message', `${socket.username} did not have that card. You drew the ${cardDrawn.name}!`)
     });
 });
 
