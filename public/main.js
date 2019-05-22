@@ -71,6 +71,7 @@ matchButton.addEventListener('click', (e) => {
 
 turnComplete.addEventListener('click', (e) => {
     socket.emit('next turn');
+    messageBoard.innerHTML = '';
 });
 
 sendQuestion.addEventListener('click', () => {
@@ -162,4 +163,5 @@ function cardClicked(card) {
 
 function goFish(username) {
     socket.emit('go fish', username);
+    messageBoard.innerHTML = '';
 }
