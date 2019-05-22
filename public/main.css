@@ -1,3 +1,7 @@
+div {
+  width: 100%;
+}
+
 .center {
   position: absolute;
   top: 50%;
@@ -91,7 +95,10 @@
 
 #interactive-section {
   font-size: 2rem;
-  transform: translateX(-30%);
+}
+
+#message-board {
+  padding: 15px;
 }
 
 ::-webkit-scrollbar {
@@ -99,9 +106,19 @@
   width: 0px;
 }
 
+@media only screen and (max-width: 1400px) {
+  #interactive-section {
+    top: 30%;
+  }
+}
+
 @media only screen and (max-width: 900px) {
   #game-code-input {
     width: 50%;
+  }
+
+  #interactive-section {
+    top: 20%;
   }
 }
 
@@ -109,5 +126,29 @@
   #game-code-input {
     font-size: 1.5rem;
     width: 60%;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+
+  #turn-complete {
+    bottom: 400px;
+  }
+
+  #turn-complete,
+  #ask-question {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .btn-large {
+    height: 34px;
+    line-height: 34px;
+  }
+
+  #turn-complete {
+    bottom: 350px;
   }
 }

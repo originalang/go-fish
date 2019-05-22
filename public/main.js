@@ -75,6 +75,7 @@ turnComplete.addEventListener('click', (e) => {
 });
 
 sendQuestion.addEventListener('click', () => {
+    socket.emit('next turn');
     socket.emit('ask', playerSelect.value, cardSelect.value);
 });
 
@@ -137,6 +138,9 @@ socket.on('question', (username, value) => {
                                 <a class="waves-effect waves-light btn-large margin-10" data-username="${username}" >Yes</a>
                                 <a class="waves-effect waves-light btn-large margin-10" data-username="${username}" onclick="goFish(this.dataset.username)">Go Fish</a>
                             </div>`;
+
+    turnComplete.classList.add('hide');
+    askQuestion.classList.add('hide');
 });
 
 socket.on('message', (resp) => {
@@ -164,4 +168,7 @@ function cardClicked(card) {
 function goFish(username) {
     socket.emit('go fish', username);
     messageBoard.innerHTML = '';
+
+    turnComplete.classList.remove('hide');
+    askQuestion.classList.remove('hide');
 }
