@@ -2,7 +2,7 @@
 An implementation of Go Fish (card game) in Node.js
 
 ## How to install/use
-1. Install NodeJS and NPM
+1. Install Node.js and NPM
 2. `git clone https://github.com/originalang/go-fish.git`
 3. `cd go-fish`
 4. `npm install`
