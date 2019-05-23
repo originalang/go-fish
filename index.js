@@ -114,6 +114,8 @@ io.sockets.on('connection', (socket) => {
 
         socket.emit('hand', socket.hand);
         socket.emit('points', socket.points);
+
+        checkHand(socket);
     });
 
     socket.on('ask', (username, value) => {
@@ -155,6 +157,8 @@ io.sockets.on('connection', (socket) => {
         } else {
             socket.emit('message', `You do not have a card with a value of ${cardValue}`)
         }
+
+        checkHand(socket);
     });
 });
 
@@ -183,6 +187,21 @@ function getActivePlayers(gameCode) {
     return connections.filter((socket) => {
         return socket.gameCode === gameCode;
     }).map(s => s.username);
+}
+
+function checkHand(socket) {
+    if (socket.hand.length === 0) {
+        let currentDeck = gameDecks[socket.gameCode];
+        let players = getClientsFromGame(socket.gameCode);
+
+        if (currentDeck.cards.length > 0) {
+            socket.hand.push(currentDeck.draw());
+            socket.emit('hand', socket.hand);
+        } else {
+            socket.emit('message', 'The deck is empty. You are out.')
+            io.to(socket.gameCode).emit('message', `${socket.username} is out of the game`);
+        }
+    }
 }
 
 // card funcitonality
