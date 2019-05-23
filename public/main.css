@@ -36,13 +36,14 @@ div {
 }
 
 #welcome-animation {
-  background-color: black;
-  height: 250px;
   position: absolute;
-  top: 10%;
+  top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 250px;
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+  text-transform: uppercase;
 }
 
 #game-code-input {
@@ -138,7 +139,6 @@ div {
 }
 
 @media only screen and (max-width: 550px) {
-
   #turn-complete {
     bottom: 400px;
   }
