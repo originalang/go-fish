@@ -21,6 +21,7 @@ const playerSelect = document.querySelector('#player-select');
 const cardSelect = document.querySelector('#card-select');
 const sendQuestion = document.querySelector('#send-question');
 const messageBoard = document.querySelector('#interactive-section');
+const leaderboard = document.querySelector('#leaderboard');
 
 // save current client's username
 let finalUsername;
@@ -160,6 +161,19 @@ socket.on('message', (resp) => {
 
 socket.on('deck empty', () => {
     messageBoard.innerHTML = 'The deck is now empty';
+});
+
+socket.on('game over', (players) => {
+    let leaderboardCollection = document.querySelector('.collection');
+
+    players.sort((a, b) => (a.points < b.points) ? 1 : -1);
+
+    for (player of players) {
+        leaderboardCollection.innerHTML += `<a href="#!" class="collection-item"><span class="badge">${player.points}</span>${player.username}</a>`
+    }
+
+    gamePage.classList.add('hide');
+    leaderboard.classList.remove('hide');
 });
 
 // helper functions

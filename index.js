@@ -192,7 +192,6 @@ function getActivePlayers(gameCode) {
 function checkHand(socket) {
     if (socket.hand.length === 0) {
         let currentDeck = gameDecks[socket.gameCode];
-        let players = getClientsFromGame(socket.gameCode);
 
         if (currentDeck.cards.length > 0) {
             socket.hand.push(currentDeck.draw());
@@ -201,7 +200,30 @@ function checkHand(socket) {
             socket.emit('message', 'The deck is empty. You are out.')
             io.to(socket.gameCode).emit('message', `${socket.username} is out of the game`);
         }
+    } 
+
+    if (checkGameOver(socket.gameCode) === true) {
+        let players = getClientsFromGame(socket.gameCode)
+        let points = [];
+
+        players.forEach((player) => {
+            points.push({username: player.username, points: player.points});
+        });
+
+        io.to(socket.gameCode).emit('game over', points);
     }
+}
+
+function checkGameOver(gameCode) {
+    let players = getClientsFromGame(gameCode);
+
+    for (player of players) {
+        if (player.hand.length > 0 || gameDecks[gameCode].cards.length > 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 // card funcitonality
